@@ -1,15 +1,14 @@
 int timeInit;
-int s_x=10, s_y=100;
+boolean startFlag = false;
 int old, resetFlag=0;
 int rectWidth=0, rectHeight=20;
-int sec=1;
+int x=2, y=100;
 
 void setup() {
-	size(512, 512, OPENGL);
+	size(800, 640, OPENGL);
 	background(0);
 	noStroke();
-	//frameRate(60);
-	timeInit = millis();
+  textSize(70);
 }
 
 void draw() {
@@ -17,28 +16,46 @@ void draw() {
 	directionalLight(255, 255, 255, -1, 0, 0);
 	pointLight(63, 127, 255, mouseX, mouseY, 200);
 	spotLight(100, 100, 100, mouseX, mouseY, 200, 0, 0, -1, PI, 2);
-  //println(mouseX + "," + mouseY);
-  //camera(width/2, height/2, 100, width/2, height/2, -200, 0, 0, 0);
+  if(mousePressed) {
+    startFlag = true;
+    timeInit = millis();
+  }
 	int timeNow = millis() - timeInit;
-	if(preTime(timeNow) == 1){
-		fill(0);
-		rect(0, 200, 512, 100);
-		fill(255);
-		rectWidth = 0;
+  if(startFlag == true){
+    if(preTime(timeNow) == 1){
+      fill(0);
+      rect(0, 400, 800, 100);
+      fill(255);
+      rectWidth = 0;
+      pushMatrix();
+      translate(x * 55, y, -20);
+      rotateY(20);
+      box(35, 35, 35);
+      popMatrix();
+      x++;
+      if(x == 12){
+        x = 2;
+        y += 70;
+      }
+    }
+    fill(0);
+    rect(0, 540, 800, 100);
+    fill(255);
+    float m = timeNow / 1000.0;
+    String str = nf(m, 2, 2);
+    String[] ary = split(str, ".");
+    text(ary[0]+":"+ary[1], 300, 540, 500, 100);
+    rectWidth += 5;
     pushMatrix();
-    translate(sec * 55, 100, -20);
-    rotateY(20);
-    box(35, 35, 35);
+    translate(width/2, 440, -20);
+    rotateX(20);
+    box(rectWidth, 18, rectHeight);
     popMatrix();
-    sec++;
-	}
-	rectWidth += 5;
-	pushMatrix();
-  translate(width/2, height/2, -20);
-  rotateX(20);
-	box(rectWidth, 18, rectHeight);
-  popMatrix();
-	if(s_x > 500) s_x = 10;
+  }
+  else{
+    fill(255);
+    text("0:0", 350, 540, 700, 100);
+  }
 }
 
 int preTime(int now){
