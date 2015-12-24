@@ -22,6 +22,11 @@ void draw() {
   }
 	int timeNow = millis() - timeInit;
   if(startFlag == true){
+    fill(0);
+    rect(0, 540, 800, 100);
+    fill(255);
+    String[] ary = split(nf(timeNow / 1000.0, 2, 2), ".");
+    text(ary[0]+":"+ary[1], 300, 540, 500, 100);
     if(preTime(timeNow) == 1){
       fill(0);
       rect(0, 400, 800, 100);
@@ -38,13 +43,6 @@ void draw() {
         y += 70;
       }
     }
-    fill(0);
-    rect(0, 540, 800, 100);
-    fill(255);
-    float m = timeNow / 1000.0;
-    String str = nf(m, 2, 2);
-    String[] ary = split(str, ".");
-    text(ary[0]+":"+ary[1], 300, 540, 500, 100);
     rectWidth += 5;
     pushMatrix();
     translate(width/2, 440, -20);
@@ -63,7 +61,7 @@ int preTime(int now){
 		old = now;
 		resetFlag = 1;
 	}
-	else if(now - old >= 1000){
+	else if(now - old >= 980){
 		resetFlag = 0;
 		return 1;
 	}
