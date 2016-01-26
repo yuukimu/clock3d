@@ -1,7 +1,8 @@
 import processing.serial.*;
 Serial port;
 int timeInit = 0;
-boolean startFlag = false;
+// boolean startFlag = false;
+int mode = 0;
 int old, resetFlag=0;
 int rectWidth=0, rectHeight=20;
 int x=2, y=100;
@@ -11,8 +12,8 @@ void setup() {
 	background(0);
 	noStroke();
   textSize(70);
-  port = new Serial(this,"/dev/tty.usbmodem1421",9600); 
-  port.clear();
+  // port = new Serial(this,"/dev/tty.usbmodem1421",9600); 
+  // port.clear();
 }
 
 void draw() {
@@ -21,11 +22,16 @@ void draw() {
 	pointLight(63, 127, 255, mouseX, mouseY, 200);
 	spotLight(100, 100, 100, mouseX, mouseY, 200, 0, 0, -1, PI, 2);
   // if(mousePressed) {
-  //   startFlag = true;
+  //   // startFlag = true;
+  //   mode += 1;
   //   timeInit = millis();
   // }
 	int timeNow = millis() - timeInit;
-  if(startFlag == true){
+  if(mode == 0){
+    fill(255);
+    text("0:0", 350, 540, 700, 100);
+  }
+  else if(mode == 1){
     fill(0);
     rect(0, 540, 800, 100);
     fill(255);
@@ -54,9 +60,8 @@ void draw() {
     box(rectWidth, 18, rectHeight);
     popMatrix();
   }
-  else if(timeInit == 0){
-    fill(255);
-    text("0:0", 350, 540, 700, 100);
+  else if(mode == 2){
+
   }
 }
 
@@ -72,15 +77,19 @@ int preTime(int now){
 	return 0;
 }
 
+void mouseClicked() {
+  mode += 1;
+  timeInit = millis();
+}
+
 void serialEvent(Serial p) { 
   if (p.available() >= 2) {
     if(p.read() == 'H'){
-      int h = (int)p.read();
-      if(h == 1){
-        startFlag = true;
+      mode = (int)p.read();
+      if(mode == 1){
         timeInit = millis();
-      } else if(h == 2){
-        startFlag = false;
+      } else if(mode == 2){
+        
       }
       port.write('A');
     } 
